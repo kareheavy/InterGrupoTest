@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">InterGrupoTest</string>
+
+    <!--LoginActivity-->
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_remenber_me">Remenber me</string>
+    <string name="login_login">login</string>
+    <string name="login_field_required">Este campo es requerido</string>
+    <string name="login_email_wrong">Formato incorrecto</string>
 </resources>
