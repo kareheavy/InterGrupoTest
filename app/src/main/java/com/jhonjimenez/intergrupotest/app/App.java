@@ -17,8 +17,9 @@ public class App extends Application {
         component = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))
-                .loginModule(new LoginModule(this))
+                .loginModule(new LoginModule())
                 .roomModule(new RoomModule(this))
+                .prospectModule(new ProspectModule())
                 .build();
     }
 

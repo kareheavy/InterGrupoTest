@@ -9,6 +9,6 @@ import io.reactivex.Observable;
 public class LoginRemoteDataSourceImpl extends RetrofitClient implements LoginRemoteDataSource {
     @Override
     public Observable<User> doLogin(String email, String password) {
-        return create(LoginApi.class, Constants.BASE_URL).doLogin(email, password);
+        return create(LoginApi.class, Constants.BASE_URL, "").doLogin(email, password);
     }
 }

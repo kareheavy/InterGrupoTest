@@ -4,6 +4,9 @@ import android.content.Context;
 import androidx.room.Room;
 import com.jhonjimenez.intergrupotest.data.local.LoginLocalDataSource;
 import com.jhonjimenez.intergrupotest.data.local.LoginLocalDataSourceImpl;
+import com.jhonjimenez.intergrupotest.data.local.ProspectLocalDataSource;
+import com.jhonjimenez.intergrupotest.data.local.ProspectLocalDataSourceImpl;
+import com.jhonjimenez.intergrupotest.data.local.dao.ProspectDAO;
 import com.jhonjimenez.intergrupotest.data.local.dao.UserDAO;
 import com.jhonjimenez.intergrupotest.data.local.database.IGDataBase;
 import dagger.Module;
@@ -35,7 +38,21 @@ public class RoomModule {
 
     @Singleton
     @Provides
+    ProspectDAO providesProspectDao(IGDataBase igDataBase){
+        return igDataBase.getProspectDAO();
+    }
+
+    @Singleton
+    @Provides
     LoginLocalDataSource providesDaoToLoginLocalDataSourceImpl(UserDAO iserDAO){
         return new LoginLocalDataSourceImpl(iserDAO);
     }
+
+    @Singleton
+    @Provides
+    ProspectLocalDataSource providesDaoToProspectLocalDataSourceImpl(ProspectDAO prospectDAO){
+        return new ProspectLocalDataSourceImpl(prospectDAO);
+    }
+
+
 }

@@ -1,9 +1,15 @@
 package com.jhonjimenez.intergrupotest.ui.login;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
+import androidx.room.EmptyResultSetException;
 import com.google.gson.Gson;
+import com.jhonjimenez.intergrupotest.data.local.LoginLocalDataSourceImpl;
+import com.jhonjimenez.intergrupotest.models.User;
 import com.jhonjimenez.intergrupotest.utils.RetrofitError;
+import com.jhonjimenez.intergrupotest.utils.Validations;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -21,10 +27,12 @@ public class LoginPresenterImpl implements LoginMvc.Presenter {
     private LoginMvc.View view;
     private LoginMvc.Repository repository;
     private Disposable disposable;
+    private Context context;
 
     @Inject
-    public LoginPresenterImpl(LoginMvc.Repository repository) {
+    public LoginPresenterImpl(LoginMvc.Repository repository, Context context) {
         this.repository = repository;
+        this.context = context;
     }
 
     @Override
@@ -34,19 +42,32 @@ public class LoginPresenterImpl implements LoginMvc.Presenter {
 
     @SuppressLint("CheckResult")
     @Override
-    public void doLogin(String email, String password) {
+    public void doLogin(String email, String password, boolean remenberMe) {
         if (view != null) {
             disposable = repository.doLogin(email, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(user -> {
-                        repository.insertUser(user)
+                        repository.getUser(user)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(() -> {
-                                    Log.i(LoginPresenterImpl.class.getName(), "User");
-                                }, throwable -> {
-                                    Log.i(LoginPresenterImpl.class.getName(), "Error");
+                                .subscribe(user1 -> {
+                                    view.startActivity();
+                                },throwable -> {
+                                    if (throwable instanceof EmptyResultSetException){
+                                        repository.insertUser(user)
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(() -> {
+                                                    if (remenberMe)
+                                                        repository.setSharedPreferences(user);
+                                                    view.startActivity();
+                                                }, throwable1 -> {
+                                                    RetrofitError objectError = new RetrofitError();
+                                                    objectError.setError("Algo salio mal, vuelve a intentarlo.");
+                                                    view.showError(objectError);
+                                                });
+                                    }
                                 });
 
                     }, throwable -> {
@@ -69,9 +90,15 @@ public class LoginPresenterImpl implements LoginMvc.Presenter {
                             objectError.setError("Algo salio mal con tu conexión, vuelve a intentarlo.");
                             view.showError(objectError);
                         } else {
-                            RetrofitError objectError = new RetrofitError();
-                            objectError.setError("Algo salio mal, comunicate con admin.");
-                            view.showError(objectError);
+                            if (throwable instanceof EmptyResultSetException) {
+                                RetrofitError objectError = new RetrofitError();
+                                objectError.setError("El usuario no se encuentra registrado localmente.");
+                                view.showError(objectError);
+                            } else {
+                                RetrofitError objectError = new RetrofitError();
+                                objectError.setError("Algo salio mal, comunicate con admin.");
+                                view.showError(objectError);
+                            }
                         }
                     });
         }
@@ -82,5 +109,30 @@ public class LoginPresenterImpl implements LoginMvc.Presenter {
     public void dispose() {
         if (disposable != null && !disposable.isDisposed())
             disposable.dispose();
+    }
+
+    @Override
+    public boolean validateInputs() {
+        if (view != null) {
+            int error = 0;
+
+            error += Validations.validateEditTextEmailAdress(view.getEditTextEmail(), view.getTextInputLayoutEmail(), context);
+            error += Validations.validateEditText(view.getEditTextPassowrd(), view.getTextInputLayoutPassowrd(), context);
+
+            return error == 0;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void getCredential() {
+        User objectUser = repository.getCredential();
+
+        if(objectUser != null){
+            if (view != null) {
+                view.setCredential(objectUser);
+            }
+        }
     }
 }

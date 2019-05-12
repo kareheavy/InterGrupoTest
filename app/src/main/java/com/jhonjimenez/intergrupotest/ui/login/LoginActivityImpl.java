@@ -1,5 +1,6 @@
 package com.jhonjimenez.intergrupotest.ui.login;
 
+import android.content.Intent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -11,6 +12,8 @@ import butterknife.OnClick;
 import com.google.android.material.textfield.TextInputLayout;
 import com.jhonjimenez.intergrupotest.R;
 import com.jhonjimenez.intergrupotest.app.App;
+import com.jhonjimenez.intergrupotest.models.User;
+import com.jhonjimenez.intergrupotest.ui.main.MainActivity;
 import com.jhonjimenez.intergrupotest.utils.Messages;
 import com.jhonjimenez.intergrupotest.utils.RetrofitError;
 import com.jhonjimenez.intergrupotest.utils.Validations;
@@ -23,11 +26,11 @@ public class LoginActivityImpl extends AppCompatActivity implements LoginMvc.Vie
     LoginMvc.Presenter presenter;
 
     @BindView(R.id.edittext_email)
-    EditText email;
+    EditText editTextEmail;
     @BindView(R.id.textinputlayout_email)
     TextInputLayout textInputEmail;
     @BindView(R.id.edittext_password)
-    EditText password;
+    EditText editTextPassword;
     @BindView(R.id.textinputlayout_password)
     TextInputLayout textInputPassword;
     @BindView(R.id.checkbox_remenber_me)
@@ -43,40 +46,40 @@ public class LoginActivityImpl extends AppCompatActivity implements LoginMvc.Vie
 
         presenter.setView(this);
 
-        password.setOnEditorActionListener((v, actionId, event) -> {
+        editTextPassword.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
 
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (validateInputs()) {
-                    presenter.doLogin(email.getText().toString(), password.getText().toString());
+                if (presenter.validateInputs()) {
+                    presenter.doLogin(editTextEmail.getText().toString(), editTextPassword.getText().toString(), rememberMe.isChecked());
                 }
+
                 handled = true;
             }
 
             return handled;
         });
 
+        editTextEmail.setText("directo@directo.com");
+        editTextPassword.setText("directo123");
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.getCredential();
+    }
 
     @OnClick(R.id.button)
     public void doLogIn() {
 
-        if (validateInputs()) {
-            presenter.doLogin(email.getText().toString(), password.getText().toString());
+        if (presenter.validateInputs()) {
+            presenter.doLogin(editTextEmail.getText().toString(), editTextPassword.getText().toString(), rememberMe.isChecked());
         }
     }
 
-    //TODO: change this validation to prenseter
-    //TODO: validate remenber me and show dialog
-    private boolean validateInputs() {
-        int error = 0;
-
-        error += Validations.validateEditTextEmailAdress(email, textInputEmail, this);
-        error += Validations.validateEditText(password, textInputPassword, this);
-
-        return error == 0;
-    }
+    //TODO: show dialog
 
 
     @Override
@@ -92,6 +95,34 @@ public class LoginActivityImpl extends AppCompatActivity implements LoginMvc.Vie
 
     @Override
     public void startActivity() {
-        Messages.showCustomToast(this, 0, "Inicio sesion exitoso.");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public EditText getEditTextEmail() {
+        return editTextEmail;
+    }
+
+    @Override
+    public EditText getEditTextPassowrd() {
+        return editTextPassword;
+    }
+
+    @Override
+    public TextInputLayout getTextInputLayoutEmail() {
+        return textInputEmail;
+    }
+
+    @Override
+    public TextInputLayout getTextInputLayoutPassowrd() {
+        return textInputPassword;
+    }
+
+    @Override
+    public void setCredential(User objectUser) {
+        editTextEmail.setText(objectUser.getEmail());
+        editTextPassword.setText(objectUser.getPassword());
+        rememberMe.setChecked(true);
     }
 }

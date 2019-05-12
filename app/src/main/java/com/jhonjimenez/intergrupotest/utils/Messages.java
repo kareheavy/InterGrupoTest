@@ -1,6 +1,8 @@
 package com.jhonjimenez.intergrupotest.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,34 @@ import android.widget.Toast;
 import com.jhonjimenez.intergrupotest.R;
 
 public class Messages {
+
+    private static ProgressDialog barProgressDialog;
+
+    public static void showProgressDialog(Context context, String title, String message) {
+
+        if (!((Activity) context).isFinishing()) {
+            if (barProgressDialog == null) {
+                barProgressDialog = new ProgressDialog(context);
+                barProgressDialog.setTitle(title);
+                barProgressDialog.setMessage(message);
+                barProgressDialog.setProgressStyle(barProgressDialog.STYLE_SPINNER);
+                barProgressDialog.setCancelable(false);
+                barProgressDialog.show();
+            } else {
+                barProgressDialog.show();
+            }
+        }
+    }
+
+    public static void dismissProgressDialog() {
+
+        if (barProgressDialog != null) {
+            if (barProgressDialog.isShowing()) {
+                barProgressDialog.dismiss();
+                barProgressDialog = null;
+            }
+        }
+    }
 
     public static void showCustomToast(Activity activity, int status, String message) {
 
