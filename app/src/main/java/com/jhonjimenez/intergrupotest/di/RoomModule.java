@@ -2,10 +2,7 @@ package com.jhonjimenez.intergrupotest.di;
 
 import android.content.Context;
 import androidx.room.Room;
-import com.jhonjimenez.intergrupotest.data.local.LoginLocalDataSource;
-import com.jhonjimenez.intergrupotest.data.local.LoginLocalDataSourceImpl;
-import com.jhonjimenez.intergrupotest.data.local.ProspectLocalDataSource;
-import com.jhonjimenez.intergrupotest.data.local.ProspectLocalDataSourceImpl;
+import com.jhonjimenez.intergrupotest.data.local.*;
 import com.jhonjimenez.intergrupotest.data.local.dao.ProspectDAO;
 import com.jhonjimenez.intergrupotest.data.local.dao.UserDAO;
 import com.jhonjimenez.intergrupotest.data.local.database.IGDataBase;
@@ -44,14 +41,20 @@ public class RoomModule {
 
     @Singleton
     @Provides
-    LoginLocalDataSource providesDaoToLoginLocalDataSourceImpl(UserDAO iserDAO){
-        return new LoginLocalDataSourceImpl(iserDAO);
+    LoginLocalDataSource providesDaoToLoginLocalDataSourceImpl(UserDAO userDAO){
+        return new LoginLocalDataSourceImpl(userDAO);
     }
 
     @Singleton
     @Provides
     ProspectLocalDataSource providesDaoToProspectLocalDataSourceImpl(ProspectDAO prospectDAO){
         return new ProspectLocalDataSourceImpl(prospectDAO);
+    }
+
+    @Singleton
+    @Provides
+    MainLocalDataSource providesDaoToMainLocalDataSourceImpl(ProspectDAO prospectDAO, UserDAO userDAO){
+        return new MainLocalDataSourceImpl(userDAO, prospectDAO);
     }
 
 

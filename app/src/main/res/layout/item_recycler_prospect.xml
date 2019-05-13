@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="5dp">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        <ImageView
+                android:id="@+id/imageview_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingStart="16dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="32dp"
+                android:paddingRight="32dp"
+                android:src="@drawable/ic_dashboard_gray_24dp"/>
+
+        <TextView
+                android:id="@+id/textview_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@+id/imageview_status"
+                android:layout_toRightOf="@+id/imageview_status"
+                android:text="Jhon Braidy Jimenez Priedrahita"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+        <TextView
+                android:id="@+id/textview_document"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textview_fullname"
+                android:layout_toEndOf="@id/imageview_status"
+                android:layout_toRightOf="@+id/imageview_status"
+                android:lineHeight="20dp"
+                android:text="cc. 1152689803"/>
+
+        <TextView
+                android:id="@+id/textview_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textview_document"
+                android:layout_toEndOf="@id/imageview_status"
+                android:layout_toRightOf="@+id/imageview_status"
+                android:paddingBottom="16dp"
+                android:text="cc. 1152689803"/>
+
+        <View
+                android:id="@+id/view_divider"
+                android:layout_below="@+id/textview_phone"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_edit"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:background="@android:color/white"
+                android:layout_margin="8dp"
+                android:layout_below="@+id/view_divider"
+                android:text="Editar"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+                android:textColor="@color/colorAccent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

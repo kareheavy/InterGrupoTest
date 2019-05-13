@@ -6,9 +6,10 @@ import com.jhonjimenez.intergrupotest.data.preferences.SharedPreferencesDataSour
 import com.jhonjimenez.intergrupotest.data.remote.LoginRemoteDataSource;
 import com.jhonjimenez.intergrupotest.models.User;
 import com.jhonjimenez.intergrupotest.utils.ConnectionDetector;
+import com.jhonjimenez.intergrupotest.utils.EncryptDecrypt;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.Single;
+
 
 public class LoginRepositoryImpl implements LoginMvc.Repository{
 
@@ -41,6 +42,7 @@ public class LoginRepositoryImpl implements LoginMvc.Repository{
 
     @Override
     public Completable insertUser(User user) {
+        user.setPassword(EncryptDecrypt.encrypt(user.getPassword()));
         sharedPreferencesDataSource.setToken(user.getAuthToken());
         return localDataSource.insertUser(user);
     }
@@ -62,11 +64,14 @@ public class LoginRepositoryImpl implements LoginMvc.Repository{
         if(sharedPreferencesDataSource.getRemenberMe()){
             User objectUser = new User();
             objectUser.setEmail(sharedPreferencesDataSource.getEmail());
-            objectUser.setPassword(sharedPreferencesDataSource.getPassword());
+            String password = EncryptDecrypt.decrypt(sharedPreferencesDataSource.getPassword());
+            objectUser.setPassword(password);
             return objectUser;
         }else{
             return null;
         }
 
     }
+
+
 }

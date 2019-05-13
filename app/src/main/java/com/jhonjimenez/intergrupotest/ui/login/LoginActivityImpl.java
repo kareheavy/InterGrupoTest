@@ -13,10 +13,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.jhonjimenez.intergrupotest.R;
 import com.jhonjimenez.intergrupotest.app.App;
 import com.jhonjimenez.intergrupotest.models.User;
-import com.jhonjimenez.intergrupotest.ui.main.MainActivity;
+import com.jhonjimenez.intergrupotest.ui.main.MainActivityImpl;
 import com.jhonjimenez.intergrupotest.utils.Messages;
 import com.jhonjimenez.intergrupotest.utils.RetrofitError;
-import com.jhonjimenez.intergrupotest.utils.Validations;
 
 import javax.inject.Inject;
 
@@ -59,11 +58,9 @@ public class LoginActivityImpl extends AppCompatActivity implements LoginMvc.Vie
 
             return handled;
         });
-
-        editTextEmail.setText("directo@directo.com");
-        editTextPassword.setText("directo123");
-
     }
+
+
 
     @Override
     protected void onStart() {
@@ -79,9 +76,6 @@ public class LoginActivityImpl extends AppCompatActivity implements LoginMvc.Vie
         }
     }
 
-    //TODO: show dialog
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -95,8 +89,9 @@ public class LoginActivityImpl extends AppCompatActivity implements LoginMvc.Vie
 
     @Override
     public void startActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivityImpl.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -124,5 +119,15 @@ public class LoginActivityImpl extends AppCompatActivity implements LoginMvc.Vie
         editTextEmail.setText(objectUser.getEmail());
         editTextPassword.setText(objectUser.getPassword());
         rememberMe.setChecked(true);
+    }
+
+    @Override
+    public void showProgressDialog(String title, String message) {
+        Messages.showProgressDialog(this, title, message);
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        Messages.dismissProgressDialog();
     }
 }

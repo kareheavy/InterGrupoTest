@@ -14,15 +14,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".ui.prospects.ProspectEditActivity"
+                  android:label="Edición prospecto"
+                  android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.main.MainActivity"
-                android:label="@string/title_activity_main"
+                android:name=".ui.main.MainActivityImpl"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".ui.login.LoginActivityImpl">
+        <activity android:name=".ui.login.LoginActivityImpl"
+                  android:label="Inicio sesión"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

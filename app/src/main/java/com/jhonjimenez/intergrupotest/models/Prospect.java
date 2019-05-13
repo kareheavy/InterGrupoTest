@@ -6,8 +6,10 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 import com.jhonjimenez.intergrupotest.utils.Constants;
 
+import java.io.Serializable;
+
 @Entity(tableName = Constants.NAME_TABLE_PROSPECT)
-public class Prospect {
+public class Prospect implements Serializable {
 
     @NonNull
     @PrimaryKey

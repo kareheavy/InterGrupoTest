@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.room.EmptyResultSetException;
+import com.jhonjimenez.intergrupotest.models.Prospect;
 import com.jhonjimenez.intergrupotest.utils.RetrofitError;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -54,14 +55,16 @@ public class ProspectsPresenterImpl implements ProspectsMVP.Presenter {
                                                 .subscribeOn(Schedulers.io())
                                                 .observeOn(AndroidSchedulers.mainThread())
                                                 .subscribe(() -> {
-                                                    Log.i(ProspectsPresenterImpl.class.getName(), "");
+                                                    view.hideProgressDialog();
+                                                    getProspects();
                                                 }, throwable1 -> {
                                                     RetrofitError objectError = new RetrofitError();
                                                     objectError.setError("Algo salio mal, vuelve a intentarlo.");
                                                     view.showError(objectError);
                                                 });
                                     } else {
-                                        Log.i(ProspectsPresenterImpl.class.getName(), "");
+                                        view.showProspects(prospects1);
+                                        view.hideProgressDialog();
                                     }
 
                                 }, throwable -> {
@@ -71,6 +74,45 @@ public class ProspectsPresenterImpl implements ProspectsMVP.Presenter {
                     }, throwable -> {
                         view.hideProgressDialog();
                         Log.i(ProspectsPresenterImpl.class.getName(), "");
+                    });
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void updateProspect(Prospect prospect) {
+        if (view != null) {
+            view.showProgressDialog("Actualizando..", "Actualizando prospecto.");
+
+            disposable = repository.updateProspect(prospect)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> {
+
+                        repository.updateProspectBackup(prospect)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(() -> {
+                                    Log.i(ProspectsPresenterImpl.class.getName(), "insertProspectBackup: ");
+                                },Throwable::printStackTrace);
+
+                        repository.getProspectsLocal()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(prospects1 -> {
+                                    view.showProspects(prospects1);
+                                    view.hideProgressDialog();
+                                },throwable -> {
+                                    view.hideProgressDialog();
+                                    RetrofitError objectError = new RetrofitError();
+                                    objectError.setError("Algo salio mal, vuelve a intentarlo.");
+                                    view.showError(objectError);
+                                });
+                    },throwable -> {
+                        view.hideProgressDialog();
+                        RetrofitError objectError = new RetrofitError();
+                        objectError.setError("Algo salio mal, vuelve a intentarlo.");
+                        view.showError(objectError);
                     });
         }
     }

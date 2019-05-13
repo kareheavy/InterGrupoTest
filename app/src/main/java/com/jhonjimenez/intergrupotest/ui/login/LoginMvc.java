@@ -20,6 +20,10 @@ public interface LoginMvc {
         TextInputLayout getTextInputLayoutEmail();
         TextInputLayout getTextInputLayoutPassowrd();
         void setCredential(User objectUser);
+
+        void showProgressDialog(String title, String message);
+
+        void hideProgressDialog();
     }
 
     interface Presenter{

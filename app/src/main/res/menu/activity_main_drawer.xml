@@ -5,11 +5,11 @@
 
     <group android:checkableBehavior="single">
         <item
-                android:id="@+id/nav_home"
+                android:id="@+id/nav_prospect"
                 android:icon="@drawable/ic_list_gray_24dp"
                 android:title="@string/main_prospect_list"/>
         <item
-                android:id="@+id/nav_gallery"
+                android:id="@+id/nav_dashboard"
                 android:icon="@drawable/ic_dashboard_gray_24dp"
                 android:title="@string/main_dashboard"/>
     </group>
@@ -17,7 +17,7 @@
     <item android:title="@string/main_sign_out">
         <menu>
             <item
-                    android:id="@+id/nav_share"
+                    android:id="@+id/nav_exit"
                     android:icon="@drawable/ic_exit_to_app_gray_24dp"
                     android:title="@string/main_sign_out"/>
         </menu>

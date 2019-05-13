@@ -20,6 +20,7 @@ public class App extends Application {
                 .loginModule(new LoginModule())
                 .roomModule(new RoomModule(this))
                 .prospectModule(new ProspectModule())
+                .mainModule(new MainModule())
                 .build();
     }
 

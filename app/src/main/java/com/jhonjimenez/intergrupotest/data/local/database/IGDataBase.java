@@ -5,9 +5,10 @@ import androidx.room.RoomDatabase;
 import com.jhonjimenez.intergrupotest.data.local.dao.ProspectDAO;
 import com.jhonjimenez.intergrupotest.data.local.dao.UserDAO;
 import com.jhonjimenez.intergrupotest.models.Prospect;
+import com.jhonjimenez.intergrupotest.models.ProspectBackup;
 import com.jhonjimenez.intergrupotest.models.User;
 
-@Database(entities = {User.class, Prospect.class},version = 1, exportSchema = false)
+@Database(entities = {User.class, Prospect.class, ProspectBackup.class},version = 2, exportSchema = false)
 public abstract class IGDataBase extends RoomDatabase {
 
     public abstract UserDAO getUserDAO();

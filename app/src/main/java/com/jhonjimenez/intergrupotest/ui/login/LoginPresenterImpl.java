@@ -44,6 +44,9 @@ public class LoginPresenterImpl implements LoginMvc.Presenter {
     @Override
     public void doLogin(String email, String password, boolean remenberMe) {
         if (view != null) {
+
+            view.showProgressDialog("Inicio de sesión", "Consultando información.");
+
             disposable = repository.doLogin(email, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -52,25 +55,35 @@ public class LoginPresenterImpl implements LoginMvc.Presenter {
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(user1 -> {
+                                    view.hideProgressDialog();
                                     view.startActivity();
-                                },throwable -> {
-                                    if (throwable instanceof EmptyResultSetException){
+                                }, throwable -> {
+                                    if (throwable instanceof EmptyResultSetException) {
                                         repository.insertUser(user)
                                                 .subscribeOn(Schedulers.io())
                                                 .observeOn(AndroidSchedulers.mainThread())
                                                 .subscribe(() -> {
                                                     if (remenberMe)
                                                         repository.setSharedPreferences(user);
+                                                    view.hideProgressDialog();
                                                     view.startActivity();
                                                 }, throwable1 -> {
+                                                    view.hideProgressDialog();
                                                     RetrofitError objectError = new RetrofitError();
                                                     objectError.setError("Algo salio mal, vuelve a intentarlo.");
                                                     view.showError(objectError);
                                                 });
+                                    }else{
+                                        view.hideProgressDialog();
+                                        RetrofitError objectError = new RetrofitError();
+                                        objectError.setError("Algo salio mal, vuelve a intentarlo.");
+                                        view.showError(objectError);
                                     }
                                 });
 
                     }, throwable -> {
+
+                        view.hideProgressDialog();
 
                         if (throwable instanceof HttpException) {
                             ResponseBody responseBody = ((HttpException) throwable).response().errorBody();
@@ -129,7 +142,7 @@ public class LoginPresenterImpl implements LoginMvc.Presenter {
     public void getCredential() {
         User objectUser = repository.getCredential();
 
-        if(objectUser != null){
+        if (objectUser != null) {
             if (view != null) {
                 view.setCredential(objectUser);
             }

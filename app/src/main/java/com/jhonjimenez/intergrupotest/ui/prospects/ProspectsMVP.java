@@ -16,17 +16,20 @@ public interface ProspectsMVP {
         void showProgressDialog(String title, String message);
         void hideProgressDialog();
         void showError(RetrofitError objectError);
+        void showProspects(List<Prospect> prospects1);
+        void hideEmptyState();
     }
     interface Presenter{
         void setView(ProspectsMVP.View view);
         void dispose();
         void getProspects();
+        void updateProspect(Prospect prospect);
     }
     interface Repository{
         Observable<List<Prospect>> getProspects();
-
         Observable<List<Prospect>> getProspectsLocal();
-
         Completable insertProspects(List<Prospect> prospects);
+        Completable updateProspect(Prospect prospect);
+        Completable updateProspectBackup(Prospect prospect);
     }
 }

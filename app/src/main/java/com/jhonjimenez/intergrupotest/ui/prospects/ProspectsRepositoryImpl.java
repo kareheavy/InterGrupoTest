@@ -6,6 +6,7 @@ import com.jhonjimenez.intergrupotest.data.preferences.SharedPreferencesDataSour
 import com.jhonjimenez.intergrupotest.data.remote.ProspectRemoteDataSource;
 import com.jhonjimenez.intergrupotest.models.Prospect;
 import com.jhonjimenez.intergrupotest.utils.ConnectionDetector;
+import com.jhonjimenez.intergrupotest.utils.Mapping;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 
@@ -32,7 +33,7 @@ public class ProspectsRepositoryImpl implements ProspectsMVP.Repository {
         if(ConnectionDetector.isConnected(context)){
             return remoteDataSource.getProspects(sharedPreferencesDataSource.getToken());
         }else{
-            return null;
+            return localDataSource.getProspects();
         }
     }
 
@@ -44,5 +45,15 @@ public class ProspectsRepositoryImpl implements ProspectsMVP.Repository {
     @Override
     public Completable insertProspects(List<Prospect> prospects) {
         return localDataSource.insertProspects(prospects);
+    }
+
+    @Override
+    public Completable updateProspect(Prospect prospect) {
+        return localDataSource.updateProspect(prospect);
+    }
+
+    @Override
+    public Completable updateProspectBackup(Prospect prospect) {
+        return localDataSource.updateProspectBackup(Mapping.convertProspectToProspectBackup(prospect));
     }
 }
